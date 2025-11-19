@@ -1,164 +1,74 @@
-📄 Veille_Flutter.md — Panorama des Frameworks Mobiles (2025)
-I. Panorama des Frameworks Mobiles
-1. Flutter (Google)
+Panorama des Frameworks Mobiles (2025)
+I. Kotlin Multiplatform (JetBrains)
+1. Concept
 
-Flutter est un framework cross-platform lancé en 2017, basé sur le moteur de rendu Skia et le langage Dart. Depuis 2017, Flutter a évolué avec Flutter 3.x : support complet desktop, web, Material 3, Impeller (nouveau moteur de rendu) et meilleure performance. Il permet une UI cohérente et fluide sur mobile, web et desktop avec un seul codebase.
+Objectif : partager la logique métier (business logic, networking, data storage) entre plusieurs plateformes (iOS, Android, desktop, backend) tout en gardant une UI native sur chaque OS.
 
-Plateformes supportées :
+Compilation multiplateforme : le code Kotlin “common” est compilé en bytecode JVM, Swift ou JavaScript selon la cible.
 
-Mobile : Android, iOS
+UI : Compose Multiplatform permet d’écrire du code UI réutilisable, mais pour UI très avancée, il est souvent préférable d’utiliser SwiftUI / Jetpack Compose natif.
 
-Web : Chrome, Firefox, Safari
+Exemple concret : une app iOS et Android partage 80% du code métier, mais chaque app a son UI optimisée nativement.
 
-Desktop : Windows, macOS, Linux
+2. Architecture
 
-Embedded : Raspberry Pi, IoT (expérimental)
+Code common → logique métier, modèles de données, network.
 
-Nouveautés Flutter 3.x :
+Code platform-specific → accès aux APIs natives, UI.
 
-Material 3 + thèmes dynamiques
+Interopérabilité : Kotlin → Swift / Kotlin → JS pour web, etc.
 
-Impeller : rendu plus rapide et stable
+Schéma slide :
 
-WASM : exécution Web plus performante
+[Common Code (Kotlin)] 
+      ↓
+--------------------------
+| iOS (SwiftUI)          |
+| Android (Jetpack Compose) |
+--------------------------
 
-Ajout d’améliorations DevTools et compilation plus rapide
+3. Performances
 
-Adoption (Flutter)
+Compilation directe en code natif → UI fluide, FPS élevé.
 
-Selon SlashData 2024, Flutter est dans le top 3 des frameworks utilisés pour le mobile. Il est populaire dans la fintech, le retail, l’éducation et les apps gouvernementales. Exemples d’applications : BMW, Google Ads, ByteDance, Alibaba.
+Pas de bridge JS → moins de latence comparé à React Native.
 
-Forces / limites (Flutter)
+Idéal pour apps complexes avec logique métier lourde (ex : finance, santé, IoT).
 
-Forces : UI cohérente, animations fluides, forte performance (AOT), productivité élevée (Hot Reload), vaste écosystème pub.dev.
+4. Accès natif & plugins
 
-Limites : taille des builds plus grande, intégrations natives parfois complexes, maîtrise de Dart nécessaire.
+Peut utiliser toutes les APIs natives (HealthKit, CarPlay, Bluetooth, WearOS).
 
-2. React Native (Meta)
+KMP ne fournit pas un écosystème “plugins” comme Flutter → développeur peut écrire des wrappers Kotlin → Swift/ObjC pour iOS.
 
-React Native permet de créer des apps mobiles en JavaScript/TypeScript en s’appuyant sur des composants natifs. La New Architecture (Fabric + TurboModules) améliore fortement la performance en réduisant le bridge JS↔native. Expo facilite le développement rapide via des outils prêts à l’emploi.
+Très flexible mais demande expertise Kotlin et plateforme cible.
 
-Exemples d’entreprises : Instagram, Tesla, Shopify, Discord.
+5. Adoption / Cas d’usage
 
-Comparaison communauté :
-React Native a plus de packages NPM, Flutter a plus de packages spécialisés performants.
+Entreprises : CashApp, Philips, McDonalds.
 
-3. Kotlin Multiplatform (JetBrains)
+Cas d’usage : apps mobiles avec logique métier partagée, backend multiplateforme, IoT apps.
 
-KMP permet de partager la logique métier (business logic) en Kotlin tout en gardant une UI 100% native (SwiftUI + Jetpack Compose). Compose Multiplatform étend même la couche UI sur desktop et web.
+Limites : UI 100% native souvent nécessaire → double maintenance si on veut une interface complexe sur toutes plateformes.
 
-Adoption : Utilisé par CashApp, McDonald’s, Philips, Netflix pour le partage de logique commune.
-Limites : UI reste native → développement UI en double.
-Forces : performance maximale, flexibilité, partage du code backend/mobile.
+6. Points forts / limites
+Points forts	Limites
+Partage logique métier efficace	UI complexe nécessite natif
+Performance proche du natif	Petite communauté comparée à Flutter/React Native
+Accès complet aux APIs natives	Besoin compétences Kotlin + plateformes
+7.Faiblesses
 
-4. SwiftUI / UIKit & Jetpack Compose (Natif)
+UI native souvent nécessaire : Compose Multiplatform existe mais n’est pas encore aussi mature que SwiftUI/Jetpack Compose.
 
-Les solutions natives offrent la meilleure performance, accès complet au hardware et intégration profonde aux APIs iOS/Android. SwiftUI et Compose augmentent fortement la productivité par rapport à UIKit/XML.
+Petite communauté : moins de packages et de support comparé à Flutter ou React Native.
 
-Limite : 2 bases de code → coût plus élevé, maintenance double.
+Courbe d’apprentissage : nécessite compétences en Kotlin et connaissance des plateformes cibles (iOS/Android).
 
-5. Autres solutions hybrides
+Maintenance multiple : si UI complexe → deux bases de code UI à maintenir.
+Sources à citer pour la slide :
 
-.NET MAUI / Xamarin : bon pour entreprises .NET mais communauté réduite.
+Kotlin Multiplatform Documentation
 
-Ionic / Capacitor : apps simples, basées WebView → limitées pour performance élevée.
+JetBrains Blog / Compose Multiplatform updates 2024-2025
 
-Uno / Avalonia / NativeScript : niches (desktop-first, verticales spécifiques).
-
-II. Architecture, performances & accès natif
-Flutter
-
-Moteur : Skia → Impeller (2024) pour moins de jank.
-
-Compilation : AOT pour production (rapide), JIT pour Hot Reload.
-
-Plateform Channels / FFI pour accéder au code natif (Swift, Kotlin, C++).
-
-React Native
-
-Fonctionne avec un bridge JS ↔ Natif.
-
-Hermes améliore temps de démarrage et mémoire.
-
-Kotlin Multiplatform
-
-Compilation native (LLVM).
-
-FPS dépend de SwiftUI/Compose.
-
-III. Outils & workflow
-Environnements
-
-Flutter : Android Studio, VS Code
-
-React Native : Expo, NodeJS, VS Code
-
-KMP : IntelliJ, Android Studio
-
-Gestion dépendances & packaging
-
-pubspec.yaml (Flutter)
-
-package.json (React)
-
-Gradle/Kotlin (KMP)
-
-IV. UX/UI & accessibilité
-Design Systems
-
-Flutter : Material 3, Cupertino
-
-React Native : React Native Paper, NativeBase
-
-Compose/SUI : thèmes dynamiques, animations fluides
-
-Internationalisation
-
-Flutter Intl, i18next, Kotlin resources
-
-Support RTL, formats automatiques
-
-V. Business, coûts & stratégie produit
-Secteurs qui adoptent Flutter
-
-Banque / fintech
-
-Transport (BMW)
-
-Retail (Alibaba)
-
-Gouvernement
-
-Apps internes/B2B
-
-Coût & productivité
-
-Flutter réduit le time-to-market : 1 seule équipe, un seul codebase.
-React Native optimise via JS mais varie selon les libs.
-KMP maximise qualité mais nécessite devs iOS/Android.
-
-Communauté & roadmap
-
-Flutter évolue rapidement (WASM, Impeller, Dart 3).
-React Native mise sur la New Architecture.
-KMP stabilisé depuis 2023.
-
-📊 Tableau comparatif simplifié
-Critère	Flutter	React Native	KMP	Natifs (SwiftUI/Compose)
-Performance	⭐⭐⭐⭐	⭐⭐⭐	⭐⭐⭐⭐	⭐⭐⭐⭐⭐
-Productivité	⭐⭐⭐⭐⭐	⭐⭐⭐⭐	⭐⭐⭐	⭐⭐⭐
-Accès natif	⭐⭐⭐	⭐⭐⭐⭐	⭐⭐⭐⭐⭐	⭐⭐⭐⭐⭐
-Communauté	⭐⭐⭐⭐	⭐⭐⭐⭐⭐	⭐⭐	⭐⭐⭐
-Coût	⭐⭐⭐⭐⭐	⭐⭐⭐⭐	⭐⭐⭐	⭐⭐
-
-📚 Sources
-
-Stack Overflow Developer Survey 2024
-
-SlashData Developer Nation 2024
-
-Google I/O 2024
-
-JetBrains KotlinConf 2024
-
-Meta React Conf 2024
+Exemples entreprises : CashApp, Philips (articles Medium / Dev blogs)
